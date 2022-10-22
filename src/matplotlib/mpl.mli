@@ -45,11 +45,11 @@ module Loc : sig
   val to_pyobject : t -> Py.Object.t
 end
 
-
 (* [set_backend] has to be called before any other operation. *)
 val set_backend : Backend.t -> unit
 val pyplot_module : unit -> Py.Object.t
 val show : unit -> unit
+val clf : unit -> unit
 val savefig : string -> unit
 val plot_data : [ `png | `jpg ] -> string
 
@@ -98,6 +98,7 @@ module Public : sig
   (* [set_backend] has to be called before any other operation. *)
   val set_backend : Backend.t -> unit
   val show : unit -> unit
+  val clf : unit -> unit
   val savefig : string -> unit
   val plot_data : [ `png | `jpg ] -> string
   val style_available : unit -> string list
@@ -111,6 +112,8 @@ val plot
   -> ?color:Color.t
   -> ?linewidth:float
   -> ?linestyle:Linestyle.t
+  -> ?marker:char
+  -> ?alpha:float
   -> ?xs:float array
   -> float array
   -> unit
@@ -121,6 +124,8 @@ val semilogy
   -> ?color:Color.t
   -> ?linewidth:float
   -> ?linestyle:Linestyle.t
+  -> ?marker:char
+  -> ?alpha:float
   -> ?xs:float array
   -> float array
   -> unit
@@ -131,6 +136,8 @@ val semilogx
   -> ?color:Color.t
   -> ?linewidth:float
   -> ?linestyle:Linestyle.t
+  -> ?marker:char
+  -> ?alpha:float
   -> ?xs:float array
   -> float array
   -> unit
@@ -141,12 +148,14 @@ val loglog
   -> ?color:Color.t
   -> ?linewidth:float
   -> ?linestyle:Linestyle.t
+  -> ?marker:char
+  -> ?alpha:float
   -> ?xs:float array
   -> float array
   -> unit
 
 val fill_between
-  : Py.Object.t
+  :  Py.Object.t
   -> ?color:Color.t
   -> ?alpha:float
   -> float array
@@ -167,9 +176,11 @@ val hist
 
 val scatter
   :  Py.Object.t
+  -> ?label:string
   -> ?s:float
-  -> ?c:Color.t
-        (* Possible markers:
+  -> ?c:
+       Color.t
+       (* Possible markers:
      'o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X'
   *)
   -> ?marker:char
@@ -202,8 +213,9 @@ end
 val imshow : Py.Object.t -> ?cmap:string -> Imshow_data.t -> unit
 
 val legend
-  : Py.Object.t
+  :  Py.Object.t
   -> ?labels:string array
   -> ?loc:Loc.t
+  -> ?framealpha:float
   -> unit
   -> unit

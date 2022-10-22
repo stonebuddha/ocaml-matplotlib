@@ -2,11 +2,12 @@ module Ax : sig
   type t
 
   val set_title : t -> string -> unit
-  val set_xlim : t -> left:float -> right:float -> unit
+  val set_xlim : t -> ?left:float -> ?right:float -> unit -> unit
   val set_ylim : t -> bottom:float -> top:float -> unit
-  val set_xlabel : t -> string -> unit
-  val set_ylabel : t -> string -> unit
+  val set_xlabel : t -> ?fontsize:float -> string -> unit
+  val set_ylabel : t -> ?fontsize:float -> string -> unit
   val set_aspect : t -> aspect:[ `auto | `equal | `f of float ] -> unit
+  val set_xticks : t -> ?labels:string array -> float array -> unit
 
   val grid
     :  t
@@ -16,7 +17,12 @@ module Ax : sig
     -> unit
 
   val legend
-    :  t -> ?labels:string array -> ?loc:Mpl.Loc.t -> unit -> unit
+    :  t
+    -> ?labels:string array
+    -> ?loc:Mpl.Loc.t
+    -> ?framealpha:float
+    -> unit
+    -> unit
 
   val plot
     :  t
@@ -24,6 +30,8 @@ module Ax : sig
     -> ?color:Mpl.Color.t
     -> ?linewidth:float
     -> ?linestyle:Mpl.Linestyle.t
+    -> ?marker:char
+    -> ?alpha:float
     -> ?xs:float array
     -> float array
     -> unit
@@ -41,9 +49,11 @@ module Ax : sig
 
   val scatter
     :  t
+    -> ?label:string
     -> ?s:float
-    -> ?c:Mpl.Color.t
-          (* Possible markers:
+    -> ?c:
+         Mpl.Color.t
+         (* Possible markers:
        'o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X'
     *)
     -> ?marker:char
@@ -108,6 +118,8 @@ module Fig : sig
     -> t * Ax.t * Ax.t
 
   val suptitle : t -> string -> unit
+  val set_tight_layout : t -> bool -> unit
+  val set_size_inches : t -> w:float -> h:float -> unit
 
   module Expert : sig
     val to_pyobject : t -> Py.Object.t
